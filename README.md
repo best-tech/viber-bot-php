@@ -9,7 +9,7 @@ See demo at [viber chat](viber://pa?chatURI=viber-bot-php&context=github.com)
 ## Installation
 
 ```
-composer require bogdaan/viber-bot-php
+composer require best-tech/viber-bot-php
 ```
 
 ## Example
