@@ -155,4 +155,20 @@ class Video extends Message
 
         return $this;
     }
+
+    public function isValid()
+    {
+        if (!($this->getMedia() && $this->getSize())) {
+            return false;
+        }
+
+        if ($this->getDuration()&&((int) $this->getDuration())>180) {
+            return false;
+        }
+        //todo сделать проверку данного поля
+        // if ($this->getThumbnail()&&( $this->getThumbnail)) {
+        //     return false;
+        // }
+        return true;
+    }
 }

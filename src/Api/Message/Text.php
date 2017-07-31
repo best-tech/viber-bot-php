@@ -59,4 +59,12 @@ class Text extends Message
 
         return $this;
     }
+
+    public function isValid()
+    {
+        if (!($this->getText())) {
+            return false;
+        }
+        return true;
+    }
 }

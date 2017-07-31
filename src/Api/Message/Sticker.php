@@ -61,4 +61,13 @@ class Sticker extends Message
 
         return $this;
     }
+
+    public function isValid()
+    {
+        if (!($this->getStickerId())) {
+            return false;
+        }
+
+        return true;
+    }
 }

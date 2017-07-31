@@ -87,4 +87,17 @@ class Location extends Message
 
         return $this;
     }
+
+    public function isValid()
+    {
+        if (!($this->getMedia() && $this->getLocation()['lat'] && $this->getLocation()['lon'])) {
+            return false;
+        }
+
+        if (((int) $this->getLocation()['lat'])<-90 || ((int) $this->getLocation()['lat'])> 90 ) return false;
+
+        if (((int) $this->getLocation()['lon'])<-180 || ((int) $this->getLocation()['lon'])> 180 ) return false;
+      
+        return true;
+    }
 }

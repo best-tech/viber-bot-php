@@ -126,4 +126,14 @@ class File extends Message
 
         return $this;
     }
+
+    public function isValid()
+    {
+        if (!($this->getMedia() && $this->getSize() && $this->getFileName())) {
+            return false;
+        }
+
+      //TODO сделать проверку размера и расширения
+        return true;
+    }
 }

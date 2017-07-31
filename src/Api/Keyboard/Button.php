@@ -161,6 +161,11 @@ class Button extends Entity
         ];
     }
 
+    public function getColumns()
+    {
+        return $this->Columns;
+    }
+
     /**
      * Get the value of Button width in columns (1-6)
      *

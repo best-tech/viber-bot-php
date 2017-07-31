@@ -68,7 +68,7 @@ class Picture extends Message
      */
     public function setText($text)
     {
-        $this->text = $text;
+        $this->text = substr($text,0,120);
 
         return $this;
     }
@@ -119,5 +119,15 @@ class Picture extends Message
         $this->thumbnail = $thumbnail;
 
         return $this;
+    }
+
+
+    public function isValid()
+    {
+        if (!($this->getText() && $this->getMedia())) {
+            return false;
+        }
+
+        return true;
     }
 }

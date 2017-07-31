@@ -59,4 +59,13 @@ class Url extends Message
 
         return $this;
     }
+
+    public function isValid()
+    {
+        if (!($this->getMedia())) {
+            return false;
+        }
+
+        return true;
+    }
 }
