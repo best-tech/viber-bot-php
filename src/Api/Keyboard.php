@@ -140,4 +140,16 @@ class Keyboard extends Entity
 
         return $this;
     }
+
+    public function isValid()
+    {
+        if ( !is_bool($this->getDefaultHeight()) ) {
+            return false;
+        }
+
+        if ( $this->getBgColor() ) {
+            // return false;
+        }
+        return true;
+    }
 }

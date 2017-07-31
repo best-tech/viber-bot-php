@@ -161,11 +161,6 @@ class Button extends Entity
         ];
     }
 
-    public function getColumns()
-    {
-        return $this->Columns;
-    }
-
     /**
      * Get the value of Button width in columns (1-6)
      *
@@ -500,5 +495,37 @@ class Button extends Entity
         $this->TextSize = $TextSize;
 
         return $this;
+    }
+
+    public function fromArray($incomArray)
+    {
+        return [
+        'Columns' => $this->getColumns(),
+        'Rows' => $this->getRows(),
+        'BgColor' => $this->getBgColor(),
+        'BgMediaType' => $this->getBgMediaType(),
+        'BgMedia' => $this->getBgMedia(),
+        'BgLoop' => $this->getBgLoop(),
+        'ActionType' => $this->getActionType(),
+        'ActionBody' => $this->getActionBody(),
+        'Image' => $this->getImage(),
+        'Text' => $this->getText(),
+        'TextVAlign' => $this->getTextVAlign(),
+        'TextHAlign' => $this->getTextHAlign(),
+        'TextOpacity' => $this->getTextOpacity(),
+        'TextSize' => $this->getTextSize()
+        ];
+    }
+
+    public function isValid()
+    {
+        if (!is_bool($this->getDefaultHeight())) {
+            return false;
+        }
+
+        if ($this->getBgColor()) {
+            // return false;
+        }
+        return true;
     }
 }
