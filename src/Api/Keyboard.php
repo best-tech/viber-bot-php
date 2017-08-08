@@ -42,6 +42,10 @@ class Keyboard extends Entity
      */
     protected $DefaultHeight;
 
+    public function __constuct()
+    {
+        $this->$Buttons = [];
+    }
     /**
      * {@inheritDoc}
      */
@@ -143,11 +147,14 @@ class Keyboard extends Entity
 
     public function isValid()
     {
-        if ( !is_bool($this->getDefaultHeight()) ) {
+        if (!is_bool($this->getDefaultHeight())) {
             return false;
         }
 
-        if ( $this->getBgColor() ) {
+        if (!\is_array($this->getButtons())) {
+            return false;
+        }
+        if ($this->getBgColor()) {
             // return false;
         }
         return true;
