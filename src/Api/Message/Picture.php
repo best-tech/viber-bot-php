@@ -68,7 +68,7 @@ class Picture extends Message
      */
     public function setText($text)
     {
-        $this->text = substr($text,0,120);
+        $this->text = mb_substr($text,0,120);
 
         return $this;
     }

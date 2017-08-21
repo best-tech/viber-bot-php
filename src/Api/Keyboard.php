@@ -51,12 +51,18 @@ class Keyboard extends Entity
      */
     public function toArray()
     {
-        return [
+        $arrResult = [
             'Type' => 'keyboard',
-            'Buttons' => $this->getButtonsApiArray(),
-            'BgColor' => $this->getBgColor(),
-            'DefaultHeight' => $this->getDefaultHeight()
+            'Buttons' => $this->getButtonsApiArray()
         ];
+
+        if ($this->getBgColor()){
+            $arrResult['BgColor'] = $this->getBgColor();
+        }
+        if ($this->getDefaultHeight()){
+            $arrResult['DefaultHeight'] = $this->getDefaultHeight();
+        }
+        return $arrResult;
     }
 
     /**
@@ -116,6 +122,10 @@ class Keyboard extends Entity
      */
     public function setBgColor($BgColor)
     {
+        $pregma = '/\#([a-fA-F]|[0-9]){3, 6}/';
+        if (!preg_match($pregma,$BgColor)) {
+            return $this;
+        }
         $this->BgColor = $BgColor;
 
         return $this;
@@ -151,7 +161,7 @@ class Keyboard extends Entity
             return false;
         }
 
-        if (!\is_array($this->getButtons())) {
+        if (!\is_array($this->getButtons()) || count($this->getButtons()) ==0 ) {
             return false;
         }
         if ($this->getBgColor()) {

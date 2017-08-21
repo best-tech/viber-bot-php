@@ -55,7 +55,7 @@ class Url extends Message
      */
     public function setMedia($media)
     {
-        $this->media = $media;
+        $this->media = mb_substr($media, 0, 2000);
 
         return $this;
     }

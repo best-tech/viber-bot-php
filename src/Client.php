@@ -125,7 +125,7 @@ class Client
      */
     public function getAccountInfo()
     {
-        return $this->call('get_account_info', []);
+        return $this->call('get_account_info', ["true"=>true]);
     }
 
     /**

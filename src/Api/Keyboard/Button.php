@@ -138,27 +138,96 @@ class Button extends Entity
      */
     protected $TextSize;
 
+    protected $OpenURLType;
+    protected $OpenURLMediaType;
+
+    public function __construct($buttonKeyVal = false, $flowCurrent = false)
+    {
+        if (!$buttonKeyVal || !$flowCurrent) {
+            return;
+        }
+        
+        foreach ($buttonKeyVal as $key => $buttonName) {
+            $arrayButton = $flowCurrent->buttons[$buttonName] ?? false;
+            if (!$arrayButton) {
+                return;
+            }
+            $this->setActionType($arrayButton['ТипДействия'] ?? null);
+            $this->setActionBody($arrayButton['Действие'] ?? "*");
+            $this->setColumns($arrayButton['Колонок'] ?? null);
+            $this->setRows($arrayBubbon['Строк'] ?? null);
+            $this->setBgColor($arrayBubbon['ЦветФона'] ?? null);
+            $this->setBgMediaType($arrayButton['ТипКартинки'] ?? null);
+            if (isset($arrayButton['Фон']) && $arrayButton['Фон']) {
+                $this->setBgMedia($flowCurrent->images[$arrayButton['Фон']]['Данные'] ?? null);
+            }
+            if (isset($arrayButton['Картинка']) && $arrayButton['Картинка']) {
+                $this->setImage( $flowCurrent->images[$arrayButton['Картинка']]['Данные'] ?? null);
+            }
+        
+            $this->setText($arrayButton['Наименование'] ?? null);
+            $this->setTextOpacity($arrayButton['ПрозрачностьТекста'] ?? null);
+            $this->setTextHAlign($arrayButton['ГоризонтальноеВыравнивание'] ?? null);
+            $this->setTextVAlign($arrayButton['ВертикальноеВыравнивание'] ?? null);
+            $this->setTextSize($arrayButton['РазмерТекста'] ?? null);
+            $this->setOpenURLType($arrayButton['КакОтркытьСсылку'] ?? null);
+            $this->setOpenURLMediaType($arrayButton['КакОткрытьМедиа'] ?? null);
+        }
+    }
+        
     /**
      * {@inheritDoc}
      */
     public function toArray()
     {
         return [
-            'Columns' => $this->getColumns(),
-            'Rows' => $this->getRows(),
-            'BgColor' => $this->getBgColor(),
-            'BgMediaType' => $this->getBgMediaType(),
-            'BgMedia' => $this->getBgMedia(),
-            'BgLoop' => $this->getBgLoop(),
-            'ActionType' => $this->getActionType(),
-            'ActionBody' => $this->getActionBody(),
-            'Image' => $this->getImage(),
-            'Text' => $this->getText(),
-            'TextVAlign' => $this->getTextVAlign(),
-            'TextHAlign' => $this->getTextHAlign(),
-            'TextOpacity' => $this->getTextOpacity(),
-            'TextSize' => $this->getTextSize()
+        'Columns' => $this->getColumns(),
+        'Rows' => $this->getRows(),
+        'BgColor' => $this->getBgColor(),
+        'BgMediaType' => $this->getBgMediaType(),
+        'BgMedia' => $this->getBgMedia(),
+        'BgLoop' => $this->getBgLoop(),
+        'ActionType' => $this->getActionType(),
+        'ActionBody' => $this->getActionBody(),
+        'Image' => $this->getImage(),
+        'Text' => $this->getText(),
+        'TextVAlign' => $this->getTextVAlign(),
+        'TextHAlign' => $this->getTextHAlign(),
+        'TextOpacity' => $this->getTextOpacity(),
+        'TextSize' => $this->getTextSize(),
+        'OpenURLType' => $this->getOpenURLType(),
+        'OpenURLMediaType' => $this->getOpenURLMediaType()
         ];
+    }
+
+    public function getOpenURLType()
+    {
+        return $this->OpenURLType;
+    }
+
+    public function getOpenURLMediaType()
+    {
+        return $this->OpenURLMediaType;
+    }
+
+    public function setOpenURLType($OpenURLType)
+    {
+        if (!$OpenURLType || $OpenURLType!=="internal" || $OpenURLType!=="external") {
+            return $this;
+        }
+        $this->OpenURLType = $OpenURLType;
+
+        return $this;
+    }
+
+    public function setOpenURLMediaType($OpenURLMediaType)
+    {
+        if (!$OpenURLMediaType || $OpenURLMediaType!=="not-media" || $OpenURLMediaType!=="picture" || $OpenURLMediaType!=="video" || $OpenURLMediaType!=="gif") {
+            return $this;
+        }
+        $this->OpenURLMediaType = $OpenURLMediaType;
+
+        return $this;
     }
 
     /**
@@ -180,6 +249,21 @@ class Button extends Entity
      */
     public function setColumns($Columns)
     {
+        if (!$Columns) {
+            return;
+        }
+        $Columns = (int) $Columns;
+        if ($this->Columns===6 && $Columns ===6) {
+            return;
+        }
+
+        if ($Columns>6) {
+            return;
+        }
+        if ($Columns<1) {
+            return;
+        }
+        
         $this->Columns = $Columns;
 
         return $this;
@@ -204,6 +288,18 @@ class Button extends Entity
      */
     public function setRows($Rows)
     {
+        
+        if (!$Rows) {
+            return;
+        }
+        $Rows = (int) $Rows;
+        if ($Rows<1) {
+            return;
+        }
+        if ($Rows>7) {
+            return;
+        }
+
         $this->Rows = $Rows;
 
         return $this;
@@ -228,6 +324,10 @@ class Button extends Entity
      */
     public function setBgColor($BgColor)
     {
+        $pregma = '/\#([a-fA-F]|[0-9]){3, 6}/';
+        if (!preg_match($pregma, $BgColor)) {
+            return $this;
+        }
         $this->BgColor = $BgColor;
 
         return $this;
@@ -252,7 +352,12 @@ class Button extends Entity
      */
     public function setBgMediaType($BgMediaType)
     {
-        $this->BgMediaType = $BgMediaType;
+        if (!$BgMediaType) {
+            return;
+        }
+        if ($BgMediaType==='picture' && $BgMediaType==='gif') {
+            $this->BgMediaType = $BgMediaType;
+        }
 
         return $this;
     }
@@ -324,7 +429,20 @@ class Button extends Entity
      */
     public function setActionType($ActionType)
     {
-        $this->ActionType = $ActionType;
+        if (!$ActionType || $ActionType==='reply' || $ActionType==="ОтправитьДанные") {
+            // $this->ActionType = "reply";
+            return $this;
+        }
+        if ($ActionType==="ОткрытьСсылку" || $ActionType==="open-url") {
+            $this->ActionType = "open-url";
+            return $this;
+        }
+        if ($ActionType==="НичегоНеДелать" || $ActionType==="none") {
+            $this->ActionType = "none";
+            return $this;
+        }
+        
+        // $this->ActionType = $ActionType;
 
         return $this;
     }
@@ -348,7 +466,11 @@ class Button extends Entity
      */
     public function setActionBody($ActionBody)
     {
-        $this->ActionBody = $ActionBody;
+        if ($this->ActionType ==='open-url') {
+            $this->ActionBody = $ActionBody;
+        } else {
+            $this->ActionBody = mb_substr($ActionBody, 0, 100);
+        }
 
         return $this;
     }
@@ -396,6 +518,10 @@ class Button extends Entity
      */
     public function setText($Text)
     {
+        if (!$Text) {
+            return $this;
+        }
+
         $this->Text = $Text;
 
         return $this;
@@ -420,6 +546,9 @@ class Button extends Entity
      */
     public function setTextVAlign($TextVAlign)
     {
+        if (!$TextVAlign || $TextVAlign!=="top"  || $TextVAlign!=="middle"  || $TextVAlign!=="bottom") {
+            return $this;
+        }
         $this->TextVAlign = $TextVAlign;
 
         return $this;
@@ -444,6 +573,9 @@ class Button extends Entity
      */
     public function setTextHAlign($TextHAlign)
     {
+        if (!$TextHAlign || $TextHAlign!=="left"  || $TextHAlign!=="center"  || $TextHAlign!=="right") {
+            return $this;
+        }
         $this->TextHAlign = $TextHAlign;
 
         return $this;
@@ -468,6 +600,9 @@ class Button extends Entity
      */
     public function setTextOpacity($TextOpacity)
     {
+        if (!$TextOpacity || $TextOpacity<0 || $TextOpacity>100) {
+            return $this;
+        }
         $this->TextOpacity = $TextOpacity;
 
         return $this;
@@ -480,6 +615,7 @@ class Button extends Entity
      */
     public function getTextSize()
     {
+        
         return $this->TextSize;
     }
 
@@ -492,6 +628,9 @@ class Button extends Entity
      */
     public function setTextSize($TextSize)
     {
+        if (!$TextSize || $TextSize!=="small"  || $TextSize!=="regular"  || $TextSize!=="large") {
+            return $this;
+        }
         $this->TextSize = $TextSize;
 
         return $this;
@@ -513,19 +652,19 @@ class Button extends Entity
         'TextVAlign' => $this->getTextVAlign(),
         'TextHAlign' => $this->getTextHAlign(),
         'TextOpacity' => $this->getTextOpacity(),
-        'TextSize' => $this->getTextSize()
+        'TextSize' => $this->getTextSize(),
+        'OpenURLType' => $this->getOpenURLType(),
+        'OpenURLMediaType' => $this->getOpenURLMediaType()
         ];
     }
 
     public function isValid()
     {
-        if (!is_bool($this->getDefaultHeight())) {
+        if (!$this->getActionBody()) {
             return false;
         }
 
-        if ($this->getBgColor()) {
-            // return false;
-        }
+        
         return true;
     }
 }

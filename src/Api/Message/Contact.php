@@ -65,7 +65,7 @@ class Contact extends Message
      */
     public function setName($name)
     {
-        $this->name = substr($name,0,28);
+        $this->name = mb_substr($name,0,28);
 
         return $this;
     }
@@ -89,7 +89,7 @@ class Contact extends Message
      */
     public function setPhoneNumber($phone_number)
     {
-        $this->phone_number = substr($phone_number, 0, 18);
+        $this->phone_number = mb_substr($phone_number, 0, 18);
 
         return $this;
     }
